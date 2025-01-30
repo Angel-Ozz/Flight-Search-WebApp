@@ -1,5 +1,7 @@
 package com.flightsearch.api.Controllers;
 
+import java.util.Optional;
+
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -18,15 +20,32 @@ public class ApiController {
     public ApiController(FlightService flightService) {
         this.flightService = flightService;
         }
-
+    
+    //flight offers api call
     @GetMapping("/search")
     public Mono<String> searchFlights(
             @RequestParam String originLocationCode,
             @RequestParam String destinationLocationCode,
             @RequestParam String departureDate,
-            @RequestParam int adults) {
+            @RequestParam(required = false) String returnDate,
+            @RequestParam int adults,
+            @RequestParam boolean nonStop,
+            @RequestParam String currencyCode) {
         
-    return flightService.searchFlight(originLocationCode, destinationLocationCode, departureDate, adults);
+    return flightService.searchFlight(originLocationCode, destinationLocationCode, departureDate, Optional.ofNullable(returnDate), adults, nonStop, currencyCode);
     
     }
+
+    //airline codes api call
+    @GetMapping("/airline")
+    public Mono<String> searchFlights(@RequestParam String airlineCodes) {
+        return flightService.searchAirline(airlineCodes);
+    }
+
+    //airport codes api call
+    @GetMapping("/airport")
+    public Mono<String> searchAirport(@RequestParam String keyword) {
+        return flightService.searchAirport(keyword);
+    }
+    
 }

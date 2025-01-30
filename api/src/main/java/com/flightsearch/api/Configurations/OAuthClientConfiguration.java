@@ -10,12 +10,14 @@ import org.springframework.security.oauth2.client.registration.InMemoryReactiveC
 import org.springframework.security.oauth2.client.registration.ReactiveClientRegistrationRepository;
 import org.springframework.security.oauth2.client.web.reactive.function.client.ServerOAuth2AuthorizedClientExchangeFilterFunction;
 import org.springframework.security.oauth2.core.AuthorizationGrantType;
+import org.springframework.web.reactive.function.client.ExchangeStrategies;
 import org.springframework.web.reactive.function.client.WebClient;
 
 @Configuration
 public class OAuthClientConfiguration {
 
     @Bean
+    @SuppressWarnings("unused")
     ReactiveClientRegistrationRepository clientRegistration(
         @Value("${spring.security.oauth2.client.registration.amadeus.client-id}") String clientId,
         @Value("${spring.security.oauth2.client.registration.amadeus.client-secret}") String clientSecret,
@@ -37,6 +39,7 @@ public class OAuthClientConfiguration {
     }
 
     @Bean
+    @SuppressWarnings("unused")
     WebClient webClient(ReactiveClientRegistrationRepository clientRegistrations) {
         InMemoryReactiveOAuth2AuthorizedClientService clientService = new InMemoryReactiveOAuth2AuthorizedClientService(clientRegistrations);
         AuthorizedClientServiceReactiveOAuth2AuthorizedClientManager authorizedClientManager = new AuthorizedClientServiceReactiveOAuth2AuthorizedClientManager(clientRegistrations, clientService);
@@ -45,6 +48,9 @@ public class OAuthClientConfiguration {
         return WebClient.builder()
                 .filter(oauth)
                 .baseUrl("https://test.api.amadeus.com")
+                .exchangeStrategies(ExchangeStrategies.builder()
+                .codecs(configurer -> configurer.defaultCodecs().maxInMemorySize(10 * 1024 * 1024)) //this cause amadesu body response was too big for the default buffer
+                .build())
                 .build();
     }
 
