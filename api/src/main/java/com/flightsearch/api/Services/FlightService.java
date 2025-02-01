@@ -5,6 +5,8 @@ import java.util.Optional;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 
+import com.flightsearch.api.Models.FlightResponse;
+
 import reactor.core.publisher.Mono;
 
 @Service
@@ -17,7 +19,7 @@ public class FlightService {
     }
 
       //flight offers api call
-    public Mono<String> searchFlight(
+    public Mono<FlightResponse> searchFlight(
         String originLocationCode, 
         String destinationLocationCode, 
         String departureDate, 
@@ -41,7 +43,7 @@ public class FlightService {
         return uriBuilder.build();
         })
         .retrieve()
-        .bodyToMono(String.class)
+        .bodyToMono(FlightResponse.class)
         .doOnTerminate(() -> System.out.println("Request completed"));
     }
 

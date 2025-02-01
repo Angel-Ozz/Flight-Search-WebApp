@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.flightsearch.api.Models.FlightResponse;
 import com.flightsearch.api.Services.FlightService;
 
 import reactor.core.publisher.Mono;
@@ -23,7 +24,7 @@ public class ApiController {
     
     //flight offers api call
     @GetMapping("/search")
-    public Mono<String> searchFlights(
+    public Mono<FlightResponse> searchFlights(
             @RequestParam String originLocationCode,
             @RequestParam String destinationLocationCode,
             @RequestParam String departureDate,
