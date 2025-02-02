@@ -41,4 +41,9 @@ public class TravelerPricings {
     public void setFareDetailsBySegment(List<FareDetailsBySegment> fareDetailsBySegment) {
         this.fareDetailsBySegment = fareDetailsBySegment;
     }
+
+    public PricePerTraveler getPricePerTraveler() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'getPricePerTraveler'");
+    }
 }

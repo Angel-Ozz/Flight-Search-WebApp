@@ -1,7 +1,11 @@
 package com.flightsearch.api.Models;
 
+import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class FareDetailsBySegment {
     private String segmentId;
     private String cabin;
@@ -9,17 +13,18 @@ public class FareDetailsBySegment {
     @JsonProperty("class")
     private String flightClass;
 
-    private IncludedCheckedBags includedCheckedBags;
+    @JsonInclude(JsonInclude.Include.NON_EMPTY)
+    private List<Amenities> amenities;
 
     public FareDetailsBySegment(){
 
     }
 
-    public FareDetailsBySegment(String segmentId, String cabin, String flightClass, IncludedCheckedBags includedCheckedBags){
+    public FareDetailsBySegment(String segmentId, String cabin, String flightClass, List<Amenities> amenities){
         this.segmentId = segmentId;
         this.cabin = cabin;
         this.flightClass = flightClass;
-        this.includedCheckedBags = includedCheckedBags;
+        this.amenities = amenities;
     }
 
     public String getSegmentId() {
@@ -45,12 +50,12 @@ public class FareDetailsBySegment {
         this.flightClass = flightClass;
     }
 
-    public IncludedCheckedBags getIncludedCheckedBags() {
-        return includedCheckedBags;
+    public List<Amenities> getAmenities() {
+        return amenities;
     }
 
-    public void setIncludedCheckedBags(IncludedCheckedBags includedCheckedBags) {
-        this.includedCheckedBags = includedCheckedBags;
+    public void setAmenities(List<Amenities> amenities) {
+        this.amenities = amenities;
     }
 
 }

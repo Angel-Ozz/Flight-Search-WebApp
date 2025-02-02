@@ -1,5 +1,6 @@
 package com.flightsearch.api.Controllers;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.web.bind.annotation.GetMapping;
@@ -7,7 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.flightsearch.api.Models.FlightResponse;
+import com.flightsearch.api.Models.FlightDTO;
 import com.flightsearch.api.Services.FlightService;
 
 import reactor.core.publisher.Mono;
@@ -24,17 +25,19 @@ public class ApiController {
     
     //flight offers api call
     @GetMapping("/search")
-    public Mono<FlightResponse> searchFlights(
+    public Mono<List<FlightDTO>> searchFlights(
             @RequestParam String originLocationCode,
             @RequestParam String destinationLocationCode,
             @RequestParam String departureDate,
             @RequestParam(required = false) String returnDate,
             @RequestParam int adults,
             @RequestParam boolean nonStop,
-            @RequestParam String currencyCode) {
+            @RequestParam String currencyCode,
+            @RequestParam (defaultValue = "null") String sortBy,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int pageSize) {
         
-    return flightService.searchFlight(originLocationCode, destinationLocationCode, departureDate, Optional.ofNullable(returnDate), adults, nonStop, currencyCode);
-    
+    return flightService.searchFlight(originLocationCode, destinationLocationCode, departureDate, Optional.ofNullable(returnDate), adults, nonStop, currencyCode, sortBy, page, pageSize);
     }
 
     //airline codes api call
