@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.flightsearch.api.Models.AirportResponse;
 import com.flightsearch.api.Models.FlightDTO;
 import com.flightsearch.api.Services.FlightService;
 
@@ -52,7 +53,7 @@ public class ApiController {
 
     //airport codes api call
     @GetMapping("/airport")
-    public Mono<String> searchAirport(@RequestParam String keyword) {
+    public Mono<AirportResponse> searchAirport(@RequestParam String keyword) {
         return flightService.searchAirport(keyword);
     }
     

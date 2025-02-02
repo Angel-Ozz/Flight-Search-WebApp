@@ -11,6 +11,7 @@ import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 
+import com.flightsearch.api.Models.AirportResponse;
 import com.flightsearch.api.Models.Amenities;
 import com.flightsearch.api.Models.FareDetailsBySegment;
 import com.flightsearch.api.Models.Fees;
@@ -84,7 +85,7 @@ public class FlightService {
     }
 
     //airport codes api call
-    public Mono<String> searchAirport(
+    public Mono<AirportResponse> searchAirport(
         String keyword) 
     {
         return webClient.get()
@@ -97,7 +98,7 @@ public class FlightService {
             return uriBuilder.build();
         })
         .retrieve()
-        .bodyToMono(String.class)
+        .bodyToMono(AirportResponse.class)
         .doOnTerminate(() -> System.out.println("Request completed"));
     }
 
