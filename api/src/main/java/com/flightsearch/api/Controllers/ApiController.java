@@ -36,8 +36,12 @@ public class ApiController {
             @RequestParam (defaultValue = "null") String sortBy,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int pageSize) {
+            
+            Optional<String> processedReturnDate = ("null".equals(returnDate) || returnDate == null || returnDate.isEmpty()) 
+                ? Optional.empty() 
+                : Optional.of(returnDate);
         
-    return flightService.searchFlight(originLocationCode, destinationLocationCode, departureDate, Optional.ofNullable(returnDate), adults, nonStop, currencyCode, sortBy, page, pageSize);
+            return flightService.searchFlight(originLocationCode, destinationLocationCode, departureDate, processedReturnDate, adults, nonStop, currencyCode, sortBy, page, pageSize);
     }
 
     //airline codes api call

@@ -18,6 +18,8 @@ public class FlightDTO {
     private Duration totalDuration;
     private List<StopDetails> stops;
     private Double price;
+    private Double base;
+    private List<Fees> fees;
     private String currency;
     private List<Double> pricePerTraveler;
     private String returnDepartureIata;
@@ -29,6 +31,10 @@ public class FlightDTO {
     private Duration returnTotalDuration;
     private List<StopDetails> returnStops;
     private String returnAirlineName;
+
+    private List<SegmentDTO> segments;
+    private List<SegmentDTO> returnSegments;
+
 
     public FlightDTO(){
 
@@ -47,6 +53,8 @@ public class FlightDTO {
     Duration totalDuration,
     List<StopDetails> stops,
     double price,
+    double base,
+    List<Fees> fees,
     String currency,
     List<Double> pricePerTraveler,
     String returnDepartureIata,
@@ -57,7 +65,10 @@ public class FlightDTO {
     LocalDateTime returnArrivalTime,
     Duration returnTotalDuration,
     List<StopDetails> returnStops,
-    String returnAirlineName
+    String returnAirlineName,
+
+    List<SegmentDTO> segments,
+    List<SegmentDTO> returnSegments
 ) {
     this.id = id;
     this.departureIata = departureIata;
@@ -71,6 +82,8 @@ public class FlightDTO {
     this.totalDuration = totalDuration;
     this.stops = stops;
     this.price = price;
+    this.base = base;
+    this.fees = fees;
     this.currency = currency;
     this.pricePerTraveler = pricePerTraveler;
     this.returnDepartureIata = returnDepartureIata;
@@ -82,6 +95,9 @@ public class FlightDTO {
     this.returnTotalDuration = returnTotalDuration;
     this.returnStops = returnStops;
     this.returnAirlineName = returnAirlineName;
+
+    this.segments = segments;
+    this.returnSegments = returnSegments;
 }
 
 
@@ -111,6 +127,8 @@ public class FlightDTO {
     public Duration getReturnTotalDuration() { return returnTotalDuration; }
     public List<StopDetails> getReturnStops() { return returnStops; }
     public String getReturnAirlineName() { return returnAirlineName; }
+    public Double getBase () { return base; }
+    public List<Fees> getFees() { return fees; }
 
     // Setters
     public void setId(String id) { this.id = id; }
@@ -136,5 +154,22 @@ public class FlightDTO {
     public void setReturnTotalDuration(Duration returnTotalDuration) { this.returnTotalDuration = returnTotalDuration; }
     public void setReturnStops(List<StopDetails> returnStops) { this.returnStops = returnStops; }
     public void setReturnAirlineName(String returnAirlineName) { this.returnAirlineName = returnAirlineName; }
+    public void setBase (Double base) { this.base = base; }
+    public void setFees(List<Fees> fees) { this.fees = fees; }
+    
+    public List<SegmentDTO> getSegments(){
+        return segments;
+    }
 
+    public void setSegments(List<SegmentDTO> segments) {
+        this.segments = segments;  
+    }
+
+    public List<SegmentDTO> getReturnSegments(){
+        return returnSegments;
+    } 
+
+    public void setReturnSegments(List<SegmentDTO> returnSegments) {
+        this.returnSegments = returnSegments;
+    }
 }
