@@ -1,5 +1,8 @@
 package com.flightsearch.api.Services;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
@@ -94,93 +97,112 @@ public class FlightService {
         .doOnTerminate(() -> System.out.println("Request completed"));
     }
 
+
+
+
     private Mono<List<FlightDTO>> processFlightResponse(FlightResponse flightResponse, String sortBy, int page, int pageSize) {
-            List<Mono<FlightDTO>> flightMonos = flightResponse.getData().stream().map(flight -> {
-                List<Itineraries> itineraries = flight.getItineraries();
-                Itineraries firstItinerary = itineraries.get(0);
-        
-                Segments firstSegment = firstItinerary.getSegments().get(0);
-                Segments lastSegment = firstItinerary.getSegments().get(firstItinerary.getSegments().size() - 1);
+        List<Mono<FlightDTO>> flightMonos = (List<Mono<FlightDTO>>) flightResponse.getData().stream().map(flight -> {
+            
+            List<Itineraries> itineraries = flight.getItineraries();
+            
+            // departure
+            Itineraries firstItinerary = itineraries.get(0);
+            Segments firstSegment = firstItinerary.getSegments().get(0);
+            Segments lastSegment = firstItinerary.getSegments().get(firstItinerary.getSegments().size() - 1);
+            
+            // return opritonal
+            Itineraries returnItinerary = itineraries.size() > 1 ? itineraries.get(1) : null;
+            Segments returnFirstSegment = returnItinerary != null ? returnItinerary.getSegments().get(0) : null;
+            Segments returnLastSegment = returnItinerary != null ? returnItinerary.getSegments().get(returnItinerary.getSegments().size() - 1) : null;
+            
+         
+            List<TravelerPricings> travelerPricings = flight.getTravelerPricings();
+            List<Double> totalPricePerTrav = travelerPricings.stream()
+                .map(travelerPricing -> Double.valueOf(travelerPricing.getPrice().getTotal()))
+                .collect(Collectors.toList());
+    
+            String departureIata = firstSegment.getDeparture().getIataCode();
+            String arrivalIata = lastSegment.getArrival().getIataCode();
+            String returnDepartureIata = returnFirstSegment != null ? returnFirstSegment.getDeparture().getIataCode() : "";
+            String returnArrivalIata = returnLastSegment != null ? returnLastSegment.getArrival().getIataCode() : "";
+    
+            // stops dep
+            List<Mono<StopDetails>> stopDetailsMonos = firstItinerary.getSegments().stream()
+                .skip(1)
+                .map(segment -> Mono.just(new StopDetails(segment.getDeparture().getIataCode(), "", segment.getDuration())))
+                .collect(Collectors.toList());
+    
+            // stops return
+            List<Mono<StopDetails>> returnStopDetailsMonos = returnItinerary != null ? returnItinerary.getSegments().stream()
+                .skip(1)
+                .map(segment -> Mono.just(new StopDetails(segment.getDeparture().getIataCode(), "", segment.getDuration())))
+                .collect(Collectors.toList()) : new ArrayList<>();
+    
+            // error 429 needs handling, change this mono with endpoint calls 
+            Mono<String> departureAirportNameMono = Mono.just(""); 
+            Mono<String> arrivalAirportNameMono = Mono.just("");
+            Mono<String> returnDepartureAirportNameMono = returnItinerary != null ? Mono.just("") : Mono.just("");
+            Mono<String> returnArrivalAirportNameMono = returnItinerary != null ? Mono.just("") : Mono.just("");
+            Mono<List<StopDetails>> stopsMono = Flux.merge(stopDetailsMonos).collectList();
+            Mono<List<StopDetails>> returnStopsMono = Flux.merge(returnStopDetailsMonos).collectList();
+            
+            Mono<String> airlineName = Mono.just("");
+            Mono<String> returnAirlineNameMono = returnItinerary != null ? Mono.just("") : Mono.just("");
 
-                List<TravelerPricings> travelerPricings = flight.getTravelerPricings();
-                List<Double> totalPricePerTrav = travelerPricings.stream()
-                    .map(travelerPricing -> Double.valueOf(travelerPricing.getPrice().getTotal()))
-                    .collect(Collectors.toList());
+            LocalDateTime returnDepartureTime = returnFirstSegment != null ? returnFirstSegment.getDeparture().getAt() : null;
+            LocalDateTime returnArrivalTime = returnLastSegment != null ? (LocalDateTime) returnLastSegment.getArrival().getAt() : null;
+            Duration returnTotalDuration = returnItinerary != null ? returnItinerary.getDuration() : Duration.ZERO;
 
-                
-                String departureIata = firstSegment.getDeparture().getIataCode();
-                String arrivalIata = lastSegment.getArrival().getIataCode();
-
-                //String airlineIata = firstSegment.getCarrierCode();
-
-        
-                List<Mono<StopDetails>> stopDetailsMonos = firstItinerary.getSegments().stream()
-                    .skip(1)
-                    .map(segment -> {
-                        String stopIata = segment.getDeparture().getIataCode();
-                        // need to solve error 429
-                        // return searchAirport(stopIata)
-                        //     .map(stopName -> new StopDetails(stopIata, stopName, segment.getDuration()));
-                
-                return Mono.just(new StopDetails(stopIata, "", segment.getDuration()));
-                    })
-                    .collect(Collectors.toList());
-        
-                //Mono<String> departureAirportNameMono = searchAirport(departureIata);
-                //Mono<String> arrivalAirportNameMono = searchAirport(arrivalIata);
-                //Mono<List<StopDetails>> stopsMono = Flux.merge(stopDetailsMonos).collectList();
-                //Mono<String> airlineName = searchAirline(airlineIata);
-
-                // need to solve error 429
-                Mono<String> departureAirportNameMono = Mono.just("");
-                Mono<String> arrivalAirportNameMono = Mono.just("");
-                Mono<List<StopDetails>> stopsMono = Flux.merge(stopDetailsMonos).collectList();
-
-                Mono<String> airlineName = Mono.just("");
-        
-                return Mono.zip(departureAirportNameMono, arrivalAirportNameMono, stopsMono, airlineName)
+    
+            return returnAirlineNameMono.flatMap(returnAirlineName -> 
+                Mono.zip(departureAirportNameMono, arrivalAirportNameMono, returnDepartureAirportNameMono, returnArrivalAirportNameMono, stopsMono, returnStopsMono, airlineName)
                     .map(tuple -> new FlightDTO(
                         flight.getId(),
                         departureIata,
-                        tuple.getT1(), // departure name
+                        tuple.getT1(), // departure airport name
                         arrivalIata,
-                        tuple.getT2(),  // arrival name
+                        tuple.getT2(), // arribale airport name
                         firstSegment.getDeparture().getAt(),
                         lastSegment.getArrival().getAt(),
                         firstSegment.getCarrierCode(),
-                        tuple.getT4(), // airline name
+                        tuple.getT7(), // carrier dep
                         firstItinerary.getDuration(),
-                        tuple.getT3(), // stops name
+                        tuple.getT5(), // stops dep
                         Double.parseDouble(flight.getPrice().getTotal()),
                         flight.getPrice().getCurrency(),
-                        totalPricePerTrav
-                        
-                        //left the tuples to not modified a lot the code and use it in the future if i can solve error 429, also 
-                     
-                    ));
-            }).collect(Collectors.toList());
-        
-            return Flux.merge(flightMonos)
-                .collectList()
-                .map(flights -> {
-                    //sort
-                    if ("price".equalsIgnoreCase(sortBy)) {
-                        flights.sort(Comparator.comparingDouble(FlightDTO::getPrice));
-                    } else if ("duration".equalsIgnoreCase(sortBy)) {
+                        totalPricePerTrav,
+                        returnDepartureIata, 
+                        tuple.getT3(), // return airport name de
+                        returnArrivalIata,
+                        tuple.getT4(), // return airport name arr
+                        returnDepartureTime,
+                        returnArrivalTime,
+                        returnTotalDuration,
+                        tuple.getT6(), // stops arr
+                        returnAirlineName
+                    ))
+            );
+        }).collect(Collectors.toList());
+    
+        return Flux.merge(flightMonos)
+            .collectList()
+            .map(flights -> {
+                // sort
+                if ("price".equalsIgnoreCase(sortBy)) {
+                    flights.sort(Comparator.comparingDouble(FlightDTO::getPrice));
+                } else if ("duration".equalsIgnoreCase(sortBy)) {
                     flights.sort(Comparator.comparing(FlightDTO::getTotalDuration));
                 }
-                /* 
-                if ("desc".equalsIgnoreCase(sortOrder)) {
-                    Collections.reverse(flights);
-                }
-                */
-                // pags
+    
+                // Pag
                 int fromIndex = page * pageSize;
                 int toIndex = Math.min(fromIndex + pageSize, flights.size());
-    
                 return flights.subList(fromIndex, toIndex);
             });
     }
+    
+    
+    
     
 
 
