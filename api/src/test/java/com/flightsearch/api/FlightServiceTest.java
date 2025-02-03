@@ -20,8 +20,8 @@ import org.springframework.web.reactive.function.client.WebClient.RequestHeaders
 import org.springframework.web.reactive.function.client.WebClient.RequestHeadersUriSpec;
 import org.springframework.web.reactive.function.client.WebClient.ResponseSpec;
 
-import com.flightsearch.api.Exceptions.FlightNotFoundException;
 import com.flightsearch.api.Exceptions.InvalidRequestException;
+import com.flightsearch.api.Exceptions.NotFoundException;
 import com.flightsearch.api.Models.FlightResponse;
 import com.flightsearch.api.Services.FlightService;
 
@@ -63,7 +63,7 @@ class FlightServiceTest {
         when(responseSpec.bodyToMono(FlightResponse.class))
                 .thenReturn(Mono.just(new FlightResponse())); 
 
-        FlightNotFoundException exception = assertThrows(FlightNotFoundException.class,
+        NotFoundException exception = assertThrows(NotFoundException.class,
                 () -> flightService.searchFlight("MEX", "LAX", "2025-05-02", Optional.empty(), 1, false, "USD", "price", 0, 10).block());
 
         assertEquals("No flights found for that ", exception.getMessage());

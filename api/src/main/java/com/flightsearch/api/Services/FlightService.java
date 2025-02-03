@@ -11,8 +11,8 @@ import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 
-import com.flightsearch.api.Exceptions.FlightNotFoundException;
 import com.flightsearch.api.Exceptions.InvalidRequestException;
+import com.flightsearch.api.Exceptions.NotFoundException;
 import com.flightsearch.api.Models.AirportResponse;
 import com.flightsearch.api.Models.Amenities;
 import com.flightsearch.api.Models.FareDetailsBySegment;
@@ -38,41 +38,46 @@ public class FlightService {
     }
 
       //flight offers api call
-    public Mono<List<FlightDTO>> searchFlight(
-    String originLocationCode, 
-    String destinationLocationCode, 
-    String departureDate, 
-    Optional<String> returnDate, 
-    int adults, 
-    boolean nonStop, 
-    String currencyCode,
-    String sortBy,  
-    int page,                  
-    int pageSize) 
-{
-    if (originLocationCode.isEmpty() || destinationLocationCode.isEmpty()) {
-        throw new InvalidRequestException("Origin and Destination must not be empty");
+      public Mono<List<FlightDTO>> searchFlight(
+        String originLocationCode, 
+        String destinationLocationCode, 
+        String departureDate, 
+        Optional<String> returnDate, 
+        int adults, 
+        boolean nonStop, 
+        String currencyCode,
+        String sortBy,  
+        int page,                  
+        int pageSize) 
+    {
+        if (originLocationCode.isEmpty() || destinationLocationCode.isEmpty()) {
+            throw new InvalidRequestException("Origin and Destination must not be empty");
+        }
+    
+        return webClient.get()
+            .uri(uriBuilder -> {
+                uriBuilder.path("/v2/shopping/flight-offers");
+                uriBuilder.queryParam("originLocationCode", originLocationCode);
+                uriBuilder.queryParam("destinationLocationCode", destinationLocationCode);
+                uriBuilder.queryParam("departureDate", departureDate);
+                returnDate.ifPresent(date -> uriBuilder.queryParam("returnDate", date)); 
+                uriBuilder.queryParam("adults", adults);
+                uriBuilder.queryParam("nonStop", nonStop);
+                uriBuilder.queryParam("currencyCode", currencyCode.trim());
+    
+                return uriBuilder.build();
+            })
+            .retrieve()
+            .bodyToMono(FlightResponse.class)
+            .flatMap(flightResponse -> { //flatmap to avoid anidation
+                if (flightResponse == null || flightResponse.getData() == null || flightResponse.getData().isEmpty()) {
+                    return Mono.error(new NotFoundException("No flights found for the given criteria"));
+                }
+                return processFlightResponse(flightResponse, sortBy, page, pageSize);
+            })
+            .doOnTerminate(() -> System.out.println("Request completed"));
     }
-
-    return webClient.get()
-        .uri(uriBuilder -> {
-            uriBuilder.path("/v2/shopping/flight-offers");
-            uriBuilder.queryParam("originLocationCode", originLocationCode);
-            uriBuilder.queryParam("destinationLocationCode", destinationLocationCode);
-            uriBuilder.queryParam("departureDate", departureDate);
-            returnDate.ifPresent(date -> uriBuilder.queryParam("returnDate", date)); 
-            uriBuilder.queryParam("adults", adults);
-            uriBuilder.queryParam("nonStop", nonStop);
-            uriBuilder.queryParam("currencyCode", currencyCode.trim());
-
-            return uriBuilder.build();
-        })
-        .retrieve()
-        .bodyToMono(FlightResponse.class)
-        .switchIfEmpty(Mono.error(new FlightNotFoundException("No flights found for the given criteria")))
-        .flatMap(flightResponse -> processFlightResponse(flightResponse, sortBy, page, pageSize))
-        .doOnTerminate(() -> System.out.println("Request completed"));
-}
+    
 
 
     //airline codes api call
@@ -94,7 +99,7 @@ public class FlightService {
     //airport codes api call
     public Mono<AirportResponse> searchAirport(String keyword) {
         if (keyword == null || keyword.trim().isEmpty()) {
-            throw new InvalidRequestException("");
+            throw new InvalidRequestException("Keyword must not be empty");
         }
     
         return webClient.get()
@@ -107,7 +112,12 @@ public class FlightService {
             })
             .retrieve()
             .bodyToMono(AirportResponse.class)
-            .switchIfEmpty(Mono.error(new FlightNotFoundException("Airport not found")))
+            .flatMap(airportResponse -> {
+                if (airportResponse == null || airportResponse.getData() == null || airportResponse.getData().isEmpty()) {
+                    return Mono.error(new NotFoundException("Airport not found for the given keyword"));
+                }
+                return Mono.just(airportResponse);
+            })
             .doOnTerminate(() -> System.out.println("Request completed"));
     }
     

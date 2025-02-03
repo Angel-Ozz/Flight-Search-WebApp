@@ -1,20 +1,20 @@
 package com.flightsearch.api.Exceptions;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-import java.util.HashMap;
-import java.util.Map;
-
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
-    @ExceptionHandler(FlightNotFoundException.class)
-    public ResponseEntity<Map<String, String>> handleFlightNotFoundException(FlightNotFoundException ex) {
+    @ExceptionHandler(NotFoundException.class)
+    public ResponseEntity<Map<String, String>> handleFlightNotFoundException(NotFoundException ex) {
         Map<String, String> errorResponse = new HashMap<>();
-        errorResponse.put("error", "Flight Not Found");
+        errorResponse.put("error", "Not Found");
         errorResponse.put("message", ex.getMessage());
         return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
     }
