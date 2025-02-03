@@ -13,6 +13,8 @@ import org.springframework.security.oauth2.core.AuthorizationGrantType;
 import org.springframework.web.reactive.function.client.ExchangeStrategies;
 import org.springframework.web.reactive.function.client.WebClient;
 
+//https://developer.okta.com/blog/2021/05/05/client-credentials-spring-security
+
 @Configuration
 public class OAuthClientConfiguration {
 
