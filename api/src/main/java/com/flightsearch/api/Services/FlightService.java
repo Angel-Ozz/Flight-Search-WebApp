@@ -303,6 +303,9 @@ public class FlightService {
                 } else if ("duration".equalsIgnoreCase(sortBy)) {
                     flights.sort(Comparator.comparing(FlightDTO::getTotalDuration));
                 }
+                else{
+                    
+                }
     
                 // Pag
                 int fromIndex = page * pageSize;

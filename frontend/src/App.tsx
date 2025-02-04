@@ -1,46 +1,60 @@
-import { useState } from "react";
-import { useNavigate } from "react-router"; 
-import AsyncSearchBar from "./components/AsyncSearchBar";
-import FormInput from "./components/FormInput";
-import FormInputSection from "./components/FormInputSection";
+import { useState } from "react"
+import { useNavigate } from "react-router"
+import { useFlights } from "./context/FlightsContext"
+import AsyncSearchBar from "./components/AsyncSearchBar"
+import FormInput from "./components/FormInput"
+import FormInputSection from "./components/FormInputSection"
 
+//React Context wasnt working even tho the values were setted and i verified that, they werent retrieved here, thats why the use of localstorage as an auxiliar measure
 function App() {
-  const [depAirport, setDepAirport] = useState();
-  const [arrAirport, setArrAirport] = useState();
-  const [depDate, setDepDate] = useState();
-  const [returnDate, setReturnDate] = useState<string | null>(null);
-  const [adults, setAdults] = useState<number>(1);
-  const [currency, setCurrency] = useState<string>("USD");
-  const [nonStop, setNonStop] = useState<boolean>(false);
-  const [loading, setLoading] = useState<boolean>(false); 
-  const [error, setError] = useState<string | null>(null); 
-  const navigate = useNavigate(); 
+  const {
+    depAirport, setDepAirport,
+    arrAirport, setArrAirport,
+    depDate, setDepDate,
+    returnDate, setReturnDate,
+    adults, setAdults,
+    currency, setCurrency,
+    nonStop, setNonStop
+  } = useFlights()
+
+  const [loading, setLoading] = useState<boolean>(false)
+  const [error, setError] = useState<string | null>(null)
+  const navigate = useNavigate()
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+    e.preventDefault()
     
-    setLoading(true); 
-    setError(null); 
+    setLoading(true) 
+    setError(null) 
 
-    const flightsEndpoint = `http://localhost:8080/flights/search?originLocationCode=${depAirport}&destinationLocationCode=${arrAirport}&departureDate=${depDate}&returnDate=${returnDate}&adults=${adults}&nonStop=${nonStop}&currencyCode=${currency}`;
+    const flightsEndpoint = `http://localhost:8080/flights/search?originLocationCode=${depAirport}&destinationLocationCode=${arrAirport}&departureDate=${depDate}&returnDate=${returnDate}&adults=${adults}&nonStop=${nonStop}&currencyCode=${currency}`
 
     try {
-      const response = await fetch(flightsEndpoint);
-      if (!response.ok) throw new Error("No Flights found"); 
-      const data = await response.json();
-      console.log("API Response:", data);
+      const response = await fetch(flightsEndpoint)
+      if (!response.ok) throw new Error("No Flights found")
+      const data = await response.json()
+      console.log("API Response:", data)
 
       
-      localStorage.setItem("flightsData", JSON.stringify(data));
+      localStorage.setItem("flightsData", JSON.stringify(data))
+      localStorage.setItem("depAirport", JSON.stringify(depAirport));
+      localStorage.setItem("arrAirport", JSON.stringify(arrAirport));
+      localStorage.setItem("depDate", JSON.stringify(depDate));
+      localStorage.setItem("returnDate", JSON.stringify(returnDate));
+      localStorage.setItem("adults", JSON.stringify(adults));
+      localStorage.setItem("currency", JSON.stringify(currency));
+      localStorage.setItem("nonStop", JSON.stringify(nonStop));
 
     
-        navigate("/flights");
+        navigate("/flights")
       } catch (err: any) {
-        setError(err.message);
+        setError(err.message)
       } finally {
-        setLoading(false);
+        setLoading(false)
       }
-    };
+    }
+ 
+
 
   return (
     <>
@@ -70,7 +84,7 @@ function App() {
 
               <FormInputSection>
                 <label>Return date</label>
-                <FormInput type="date" name="return-date" setState={setReturnDate} min={depDate} />
+                <FormInput type="date" name="return-date" setState={setReturnDate} min={depDate ?? ""} />
               </FormInputSection>
 
               <FormInputSection>
@@ -100,7 +114,7 @@ function App() {
         </main>
       )}
     </>
-  );
+  )
 }
 
 export default App;
