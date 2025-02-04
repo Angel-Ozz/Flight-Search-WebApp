@@ -1,17 +1,21 @@
-// ./AsyncSearchBar
+
 import React, { useEffect, useState } from "react";
 import AsyncSelect from "react-select/async";
 import makeAnimated from "react-select/animated";
 
-const AsyncSearchBar = ({setState}) => {
+type Props = {
+  setState: any
+}
 
-  //set default query terms
+const AsyncSearchBar = ({setState}:Props) => {
+
+
   const [query, setQuery] = useState("");
 
-  //get animated components wrapper
+
   const animatedComponents = makeAnimated();
 
- // fetch filteres search results for dropdown
+
   const loadOptions = () => {
     return fetch(`http://localhost:8080/flights/airport?keyword=${query}`)
     .then((res) => res.json()).then((data)=> {
