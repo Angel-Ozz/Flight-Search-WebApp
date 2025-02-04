@@ -3,6 +3,7 @@ package com.flightsearch.api.Controllers;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -14,6 +15,7 @@ import com.flightsearch.api.Services.FlightService;
 
 import reactor.core.publisher.Mono;
 
+@CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/flights")
 public class ApiController {

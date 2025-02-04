@@ -306,6 +306,9 @@ public class FlightService {
     
                 // Pag
                 int fromIndex = page * pageSize;
+                if (fromIndex >= flights.size()) {
+                    return new ArrayList<FlightDTO>();
+                }
                 int toIndex = Math.min(fromIndex + pageSize, flights.size());
                 return flights.subList(fromIndex, toIndex);
             });
