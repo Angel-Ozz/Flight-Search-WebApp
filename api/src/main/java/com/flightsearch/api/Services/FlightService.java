@@ -154,18 +154,19 @@ public class FlightService {
             String returnDepartureIata = returnFirstSegment != null ? returnFirstSegment.getDeparture().getIataCode() : "";
             String returnArrivalIata = returnLastSegment != null ? returnLastSegment.getArrival().getIataCode() : "";
     
-            // stops dep here i use mono, and streams instead of simple iteration because this was supposed to be merged with the endpoint call
+            // stops dep here i use mono, and streams instead of simple iteration because this was supposed to be merged with the endpoint call 
+            //Int Stream bbasically a for loop
             List<Mono<StopDetails>> stopDetailsMonos = IntStream.range(1, firstItinerary.getSegments().size()) 
                 .mapToObj(i -> {
                 Segments prevSegment = firstItinerary.getSegments().get(i - 1);
                 Segments currentSegment = firstItinerary.getSegments().get(i);
 
-
                 LocalDateTime prevArrival = prevSegment.getArrival().getAt();
                 LocalDateTime currentDeparture = currentSegment.getDeparture().getAt();
 
                 Duration layoverDuration = Duration.between(prevArrival, currentDeparture);
- 
+                    
+                //mono.just encapsules the obj
                 return Mono.just(new StopDetails(
                     currentSegment.getDeparture().getIataCode(), 
                     "",
@@ -258,7 +259,6 @@ public class FlightService {
                 for (int i = 0; i < returnItinerary.getSegments().size(); i++) {
                     Segments segment = returnItinerary.getSegments().get(i);
 
-      
                     TravelerPricings travelerPricing = flight.getTravelerPricings().get(0);
                     List<FareDetailsBySegment> fareDetails = travelerPricing.getFareDetailsBySegment();
 

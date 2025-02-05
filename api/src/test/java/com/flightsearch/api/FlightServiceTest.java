@@ -56,8 +56,6 @@ class FlightServiceTest {
         doReturn(responseSpec).when(requestHeadersSpec).retrieve();
     }
 
-
-
     @Test
     void testSearchFlight_NoFlightsFound() {
         when(responseSpec.bodyToMono(FlightResponse.class))
