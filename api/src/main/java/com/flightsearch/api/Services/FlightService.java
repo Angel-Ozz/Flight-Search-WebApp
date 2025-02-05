@@ -7,6 +7,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -153,17 +154,48 @@ public class FlightService {
             String returnDepartureIata = returnFirstSegment != null ? returnFirstSegment.getDeparture().getIataCode() : "";
             String returnArrivalIata = returnLastSegment != null ? returnLastSegment.getArrival().getIataCode() : "";
     
-            // stops dep
-            List<Mono<StopDetails>> stopDetailsMonos = firstItinerary.getSegments().stream()
-                .skip(1)
-                .map(segment -> Mono.just(new StopDetails(segment.getDeparture().getIataCode(), "", segment.getDuration())))
-                .collect(Collectors.toList());
+            // stops dep here i use mono, and streams instead of simple iteration because this was supposed to be merged with the endpoint call
+            List<Mono<StopDetails>> stopDetailsMonos = IntStream.range(1, firstItinerary.getSegments().size()) 
+                .mapToObj(i -> {
+                Segments prevSegment = firstItinerary.getSegments().get(i - 1);
+                Segments currentSegment = firstItinerary.getSegments().get(i);
+
+
+                LocalDateTime prevArrival = prevSegment.getArrival().getAt();
+                LocalDateTime currentDeparture = currentSegment.getDeparture().getAt();
+
+                Duration layoverDuration = Duration.between(prevArrival, currentDeparture);
+ 
+                return Mono.just(new StopDetails(
+                    currentSegment.getDeparture().getIataCode(), 
+                    "",
+                    layoverDuration
+                ));
+            })
+            .collect(Collectors.toList());
+
     
-            // stops return
-            List<Mono<StopDetails>> returnStopDetailsMonos = returnItinerary != null ? returnItinerary.getSegments().stream()
-                .skip(1)
-                .map(segment -> Mono.just(new StopDetails(segment.getDeparture().getIataCode(), "", segment.getDuration())))
-                .collect(Collectors.toList()) : new ArrayList<>();
+            // stops return 
+            List<Mono<StopDetails>> returnStopDetailsMonos = returnItinerary != null ? 
+                IntStream.range(1, returnItinerary.getSegments().size())  
+                    .mapToObj(i -> {
+                    Segments prevSegment = returnItinerary.getSegments().get(i - 1);
+                    Segments currentSegment = returnItinerary.getSegments().get(i);
+                   
+                    LocalDateTime prevArrival = prevSegment.getArrival().getAt();
+                    LocalDateTime currentDeparture = currentSegment.getDeparture().getAt();
+           
+                    Duration layoverDuration = Duration.between(prevArrival, currentDeparture);
+
+                    return Mono.just(new StopDetails(
+                        currentSegment.getDeparture().getIataCode(), 
+                        "", 
+                        layoverDuration
+                    ));
+                })
+                .collect(Collectors.toList()) 
+            : new ArrayList<>();
+
     
             // error 429 needs handling, change this mono with endpoint calls 
             Mono<String> departureAirportNameMono = Mono.just(""); 
@@ -185,11 +217,11 @@ public class FlightService {
             List<SegmentDTO> segmentDetails = new ArrayList<>();
             List<SegmentDTO> returnSegmentDetails = new ArrayList<>();
 
-            // getting dep segs
+            // getting dep segs at the end i did use iterarion, it was simple
             for (int i = 0; i < firstItinerary.getSegments().size(); i++) {
                 Segments segment = firstItinerary.getSegments().get(i);
 
-                // map the segs with the details
+                // map the segms with the details
                 TravelerPricings travelerPricing = flight.getTravelerPricings().get(0);
                 List<FareDetailsBySegment> fareDetails = travelerPricing.getFareDetailsBySegment();
 
@@ -221,7 +253,7 @@ public class FlightService {
                 ));
             }
 
-            //RETURN segments if exists
+            //RETURN segms if exist
             if (returnItinerary != null) {
                 for (int i = 0; i < returnItinerary.getSegments().size(); i++) {
                     Segments segment = returnItinerary.getSegments().get(i);

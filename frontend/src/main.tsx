@@ -4,6 +4,7 @@ import App from './App.tsx'
 import Flights from './pages/Flights.tsx'
 import { BrowserRouter, Route, Routes } from 'react-router'
 import { FlightsProvider } from './context/FlightsContext.tsx'
+import FlightDetails from './pages/FlightDetails.tsx'
 
 createRoot(document.getElementById('root')!).render(
   <FlightsProvider>
@@ -11,6 +12,8 @@ createRoot(document.getElementById('root')!).render(
     <Routes>
       <Route path="/search" element={<App />} />
       <Route path="/flights" element={<Flights />} />
+      <Route path="/details" element={<FlightDetails />}/>
+
     </Routes>
   </BrowserRouter>
   </FlightsProvider>

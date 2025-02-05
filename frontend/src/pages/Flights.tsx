@@ -6,48 +6,46 @@ import Switcher3 from "../components/Switch3"
 
 //React Context wasnt working even tho the values were setted and i verified that, they werent retrieved here, thats why the use of localstorage as an auxiliar measure
 function Flights() {
-    const {
-      depAirport, setDepAirport,
-      arrAirport, setArrAirport,
-      depDate, setDepDate,
-      returnDate, setReturnDate,
-      adults, setAdults,
-      currency, setCurrency,
-      nonStop, setNonStop
-    } = useFlights()
+  const {
+    depAirport, setDepAirport,
+    arrAirport, setArrAirport,
+    depDate, setDepDate,
+    returnDate, setReturnDate,
+    adults, setAdults,
+    currency, setCurrency,
+    nonStop, setNonStop
+  } = useFlights()
 
-    const [pages, setPages] = useState<number>(0)
-    const [sortByPrice, setSortByPrice] = useState<string | null>(null)
-    const [sortByDuration, setSortByDuration] = useState<string | null>(null)
-    const sortBy = [sortByPrice, sortByDuration].filter(Boolean).join(",") || null
+  const [pages, setPages] = useState<number>(0)
+  const [sortByPrice, setSortByPrice] = useState<string | null>(null)
+  const [sortByDuration, setSortByDuration] = useState<string | null>(null)
+  const sortBy = [sortByPrice, sortByDuration].filter(Boolean).join(",") || null
 
-    const [loading, setLoading] = useState<boolean>(false)
-    const [error, setError] = useState<string | null>(null)
-    const [flights, setFlights] = useState<any>(null)
-    const navigate = useNavigate()
+  const [loading, setLoading] = useState<boolean>(false)
+  const [flights, setFlights] = useState<any>(null)
+  const navigate = useNavigate()
 
-    
-    useEffect(() => {
-      setLoading(true)
-      setError(null)
 
-      setDepAirport(JSON.parse(localStorage.getItem("depAirport") || "null"))
-      setArrAirport(JSON.parse(localStorage.getItem("arrAirport") || "null"))
-      setDepDate(JSON.parse(localStorage.getItem("depDate") || "null"))
-      setReturnDate(JSON.parse(localStorage.getItem("returnDate") || "null"))
-      setAdults(JSON.parse(localStorage.getItem("adults") || "1"))
-      setCurrency(JSON.parse(localStorage.getItem("currency") || `"USD"`))
-      setNonStop(JSON.parse(localStorage.getItem("nonStop") || "false"))
+  useEffect(() => {
+    setLoading(true)
 
-    
-      const storedSortBy = localStorage.getItem("sortBy")
+    setDepAirport(JSON.parse(localStorage.getItem("depAirport") || "null"))
+    setArrAirport(JSON.parse(localStorage.getItem("arrAirport") || "null"))
+    setDepDate(JSON.parse(localStorage.getItem("depDate") || "null"))
+    setReturnDate(JSON.parse(localStorage.getItem("returnDate") || "null"))
+    setAdults(JSON.parse(localStorage.getItem("adults") || "1"))
+    setCurrency(JSON.parse(localStorage.getItem("currency") || `"USD"`))
+    setNonStop(JSON.parse(localStorage.getItem("nonStop") || "false"))
+
+
+    const storedSortBy = localStorage.getItem("sortBy")
       if (storedSortBy) {
         const sortArray = storedSortBy.split(",")
         setSortByPrice(sortArray.includes("price") ? "price" : null)
         setSortByDuration(sortArray.includes("duration") ? "duration" : null)
       }
 
-      const storedData = localStorage.getItem("flightsData")
+    const storedData = localStorage.getItem("flightsData")
       if (storedData) {
         setFlights(JSON.parse(storedData));
       } else {
@@ -57,36 +55,34 @@ function Flights() {
     }, [])
 
 
-    useEffect(() => {
-      const sortArray = [sortByPrice, sortByDuration].filter(Boolean).join(",")
-      localStorage.setItem("sortBy", sortArray)
-    }, [sortByPrice, sortByDuration])
+  useEffect(() => {
+    const sortArray = [sortByPrice, sortByDuration].filter(Boolean).join(",")
+    localStorage.setItem("sortBy", sortArray)
+  }, [sortByPrice, sortByDuration])
 
 
-    useEffect(() => {
-      if (!depAirport || !arrAirport || !depDate) return
+  useEffect(() => {
 
-      const flightEndpointSortPage = `http://localhost:8080/flights/search?originLocationCode=${depAirport}&destinationLocationCode=${arrAirport}&departureDate=${depDate}&returnDate=${returnDate || ""}&adults=${adults}&nonStop=${nonStop}&currencyCode=${currency}${sortBy ? `&sortBy=${sortBy}` : ""}&page=${pages}`
+    const flightEndpointSortPage = `http://localhost:8080/flights/search?originLocationCode=${depAirport}&destinationLocationCode=${arrAirport}&departureDate=${depDate}&returnDate=${returnDate || ""}&adults=${adults}&nonStop=${nonStop}&currencyCode=${currency}${sortBy ? `&sortBy=${sortBy}` : ""}&page=${pages}`
 
-      const fetchFlights = async () => {
-        try {
-          setLoading(true);
-          setError(null);
-          const response = await fetch(flightEndpointSortPage)
-          if (!response.ok) throw new Error("No Flights found")
-          const data = await response.json();
-          console.log("API Response:", data);
-          localStorage.setItem("flightsData", JSON.stringify(data))
-          setFlights(data)
-        } catch (err: any) {
-          setError(err.message)
-        } finally {
-          setLoading(false)
-        }
-      };
+    const fetchFlights = async () => {
+      try {
+        setLoading(true);
+        const response = await fetch(flightEndpointSortPage)
+        if (!response.ok) throw new Error("No Flights found")
+        const data = await response.json();
+        console.log("API Response:", data);
+        localStorage.setItem("flightsData", JSON.stringify(data))
+        setFlights(data)
+      } catch (err: any) {
+        console.error(err.message);
+      } finally {
+        setLoading(false)
+      }
+    };
 
-      fetchFlights()
-    }, [pages, sortBy, navigate])
+    fetchFlights()
+  }, [pages, sortBy, navigate])
 
   return (
     <>
@@ -98,13 +94,7 @@ function Flights() {
         <div className="h-screen bg-slate-300">
           <h1 className="font-bold mt-1 ml-10 text-6xl">Flight Results</h1>
           <button
-            className="bg-blue-800 cursor-pointer rounded-full text-white disabled:opacity-50 m-3 p-2 ml-10"
-            onClick={() => navigate("/search")}
-          >
-            Back to search
-          </button>
-
-          {/* Sort switches */}
+            className="bg-blue-800 cursor-pointer rounded-full text-white disabled:opacity-50 m-3 p-2 ml-10" onClick={() => navigate("/search")}>Back to search</button>
           <div className="flex items-center justify-end space-x-4 p-4">
             <label className="mr-2 font-semibold">Sort By:</label>
             <div className="flex items-center space-x-2">
@@ -133,12 +123,22 @@ function Flights() {
                     {flight.stops.map((stop: any, index: number) => (
                       <div key={index}>{`${stop.airportCode} - ${stop.duration.split("T")[1].toLowerCase()}`}</div>
                     ))}
+                    <p>-----------</p>
+                    <span>{flight.returnArrivalTime && flight.returnTotalDuration.split("T")[1].toLowerCase()}</span>
+                    <p>{flight.returnStops.length === 0 ? "" : ` Return Stops: ${flight.returnStops.length}`}</p>
+                    {flight.returnStops.map((returnStop: any, index: number) => (
+                      <div key={index}>{`${returnStop.airportCode} - ${returnStop.duration.split("T")[1].toLowerCase()}`}</div>
+                    ))}
                   </div>
                   {/* COL 3 */}
                   <div className="col-span-4 row-span-2">
                     <p>{`$${flight.price} ${flight.currency}`}<br />total</p>
                     <br />
                     <p>{`$${flight.pricePerTraveler[0]} ${flight.currency}`}<br />per Traveler</p>
+                    <button className="bg-blue-400 hover:bg-blue-600 px-4 py-2 transition-colors" onClick={() => {
+                      localStorage.setItem("flight_info", JSON.stringify(flight))
+                      navigate("/details")
+                    }}>Details</button>
                   </div>
                   {flight.returnArrivalTime && (
                     <div className="col-span-4">
@@ -150,7 +150,6 @@ function Flights() {
                 </div>
               ))}
 
-              {/* Pagination */}
               <div className="flex items-center justify-end space-x-4 p-4">
                 {pages > 0 && (
                   <button className="bg-blue-800 cursor-pointer rounded-full text-white m-3 pl-5 pr-5 p-2 ml-10" onClick={() => setPages((prev) => prev - 1)}>

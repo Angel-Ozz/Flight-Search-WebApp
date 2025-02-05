@@ -47,6 +47,7 @@ function App() {
 
     
         navigate("/flights")
+        
       } catch (err: any) {
         setError(err.message)
       } finally {
