@@ -51,6 +51,7 @@ Ensure you have the following installed:
    - `AMADEUS_TOKEN_URI`  
    - `AMADEUS_GRANT_TYPE`
  - Ensure these are correctly set in the `.env` file before running the backend.
+ - To get the Sign-in to Amadeus for Developers web site to create an API Key and API Secret.
 
 ---
 
