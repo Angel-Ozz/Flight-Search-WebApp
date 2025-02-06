@@ -96,7 +96,7 @@ function Flights() {
         <div className="h-screen bg-slate-300">
           <h1 className="font-bold mt-1 ml-10 text-6xl">Flight Results</h1>
           <button
-            className="bg-blue-800 cursor-pointer rounded-full text-white disabled:opacity-50 m-3 p-2 ml-10" onClick={() => navigate("/search")}>Back to search</button>
+            className="bg-blue-800 cursor-pointer rounded-full text-white disabled:opacity-50 m-3 p-2 ml-10" onClick={() => navigate("/")}>Back to search</button>
           <div className="flex items-center justify-end space-x-4 p-4">
             <label className="mr-2 font-semibold">Sort By:</label>
             <div className="flex items-center space-x-2">

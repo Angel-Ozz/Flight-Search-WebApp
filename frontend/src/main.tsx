@@ -10,7 +10,7 @@ createRoot(document.getElementById('root')!).render(
   <FlightsProvider>
   <BrowserRouter>
     <Routes>
-      <Route path="/search" element={<App />} />
+      <Route path="/" element={<App />} />
       <Route path="/flights" element={<Flights />} />
       <Route path="/details" element={<FlightDetails />}/>
 

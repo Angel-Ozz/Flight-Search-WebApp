@@ -110,7 +110,7 @@ function App() {
 
               {error && <p className="text-red-500">{error}</p>} {}
               
-              <input value="Search FLights" aria-label="Search Flights" type="submit" className="bg-blue-800 cursor-pointer rounded-full text-white disabled:opacity-50 mt-3 p-2" disabled={loading} />
+              <input value="Search Flights" aria-label="Search Flights" type="submit" className="bg-blue-800 cursor-pointer rounded-full text-white disabled:opacity-50 mt-3 p-2" disabled={loading} />
             </form>
           </section>
         </main>
