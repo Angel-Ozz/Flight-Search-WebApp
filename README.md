@@ -9,14 +9,15 @@ A **full-stack flight search application** that allows users to find flights bas
 ---
 
 ## Features
-- Search flights by departure & arrival locations
-- Filter by departure date, return date, currency, and non-stop flights
+- Search flights by departure, arrival locations, departure date, return date (optional), number of adults, currency, and non-stop flights
+- Sort by price and/or duration
 - Fetch real-time flight data from the Amadeus API
-- Responsive UI optimized for desktop and mobile
+- Responsive and reactive UI builded with basic html components and react
 
 ---
 
 ## Project Structure
+```
 Flight-Search-WebApp/
 │── api/                     # Backend (Spring Boot with gradle ) and java 21
 │   ├── src/                 # Java source code
@@ -31,7 +32,7 @@ Flight-Search-WebApp/
 │
 │── docker-compose.yml       # Docker Compose configuration
 │── README.md                # Project documentation
-
+```
 
 ---
 
