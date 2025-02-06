@@ -67,7 +67,7 @@ docker-compose down
 ```
  - The backend will be running in port 8080
  - The frontend will be running in por 3000
---
+---
 ### **Option 2: Running locally **
 This will build and start both the frontend and backend services.
 
