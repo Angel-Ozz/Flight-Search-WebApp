@@ -55,7 +55,7 @@ Ensure you have the following installed:
 
 ---
 
-### ** Running with Docker Compose (Recommended)**
+### ** Option 1: Running with Docker Compose (Recommended)**
 This will build and start both the frontend and backend services.
 
 ```command to build the docker compose and get it up running
@@ -68,7 +68,7 @@ docker-compose down
  - The backend will be running in port 8080
  - The frontend will be running in por 3000
 
-### ** Running locally **
+### **Option 2: Running locally **
 This will build and start both the frontend and backend services.
 
 use this to start the backend at port 8080
