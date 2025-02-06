@@ -70,12 +70,13 @@ docker-compose down
 ### ** Running locally **
 This will build and start both the frontend and backend services.
 
-``` use this to start the backend at port 8080
+use this to start the backend at port 8080
+``` 
 cd api
 ./gradlew bootRun
 ```
-
-```use this to start the frontend at port 5173 (port used by vite)
+use this to start the frontend at port 5173 (port used by vite)
+```
 cd frontend
 npm install
 npm run dev
