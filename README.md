@@ -44,6 +44,14 @@ Ensure you have the following installed:
 - [Docker Compose](https://docs.docker.com/compose/)
 - (Optional) [Node.js 18+](https://nodejs.org/) & [Gradle 8+](https://gradle.org/)
 
+- **Backend Setup:**  
+  - Configure an endpoint with the following Amadeus API credentials:  
+   - `AMADEUS_API_KEY`  
+   - `AMADEUS_API_SECRET`  
+   - `AMADEUS_TOKEN_URI`  
+   - `AMADEUS_GRANT_TYPE`
+ - Ensure these are correctly set in the `.env` file before running the backend.
+
 ---
 
 ### ** Running with Docker Compose (Recommended)**
