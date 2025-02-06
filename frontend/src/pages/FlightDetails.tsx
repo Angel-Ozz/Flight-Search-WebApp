@@ -23,17 +23,34 @@ const FlightDetails = () => {
                     <div className="flex justify-between items-center">
                         <button className="bg-blue-800 cursor-pointer rounded-full text-white disabled:opacity-50 m-3 p-2 ml-10" onClick={() => navigate("/flights")}>Back to flights</button>
                     </div>
-                    <div className={`rounded-xl grid grid-cols-12 border bg-slate-400 p-4 gap-4 ${flight.returnDepartureTime ? " grid-rows-2" : ""}`}>
+                    <div className={`rounded-xl grid grid-cols-12 border bg-slate-400 p-4 gap-4 ${flight.returnDepartureTime ? " grid-rows" : ""}`}>
                         {/* COL 1 */}
                         <div className="col-span-4">
-                            <span>{`${flight.departureTime} - ${flight.arrivalTime}`}</span>
+                        <span>
+                            {`${new Date(flight.departureTime).toLocaleString('es-ES', { 
+                                day: '2-digit', month: '2-digit', year: 'numeric', 
+                                hour: '2-digit', minute: '2-digit' 
+                            })} - 
+                                ${new Date(flight.arrivalTime).toLocaleString('es-ES', { 
+                                day: '2-digit', month: '2-digit', year: 'numeric', 
+                                hour: '2-digit', minute: '2-digit' 
+                            })}`}
+                    </span>
                             <p>{`${flight.departureIata} - ${flight.arrivalIata}`}</p>
                         </div>
                         {/* COL 2 */}
                         <div className="col-span-4">
-                            {flight.stops.length != 0 ? flight.stops.map((stop: any, index: number) => (
-                                <div key={index}>{`${stop.airportCode} - ${stop.duration.split("T")[1].toLowerCase()}`}</div>
-                            )) : <p>NonStop</p>}
+                        <span>{flight.totalDuration.split("T")[1].toLowerCase()}</span>
+                            <p>{flight.stops.length === 0 ? "(Non-Stop)" : `Stops: ${flight.stops.length}`}</p>
+                            {flight.stops.map((stop: any, index: number) => (
+                            <div key={index}>{`${stop.airportCode} - ${stop.duration.split("T")[1].toLowerCase()}`}</div>
+                            ))}
+                            <p>-----------</p>
+                            <span>{flight.returnArrivalTime && flight.returnTotalDuration.split("T")[1].toLowerCase()}</span>
+                            <p>{flight.returnStops.length === 0 ? "(Non-Stop)" : ` Return Stops: ${flight.returnStops.length}`}</p>
+                            {flight.returnStops.map((returnStop: any, index: number) => (
+                            <div key={index}>{`${returnStop.airportCode} - ${returnStop.duration.split("T")[1].toLowerCase()}`}</div>
+                            ))}
                         </div>
                         {/* COL 3 */}
                         <div className="col-span-4 row-span-2">
@@ -42,7 +59,16 @@ const FlightDetails = () => {
                         </div>
                         {flight.returnArrivalTime && (
                             <div className="col-span-4">
-                                <span>{`${flight.returnDepartureTime} - ${flight.returnArrivalTime}`}</span>
+                                <span>
+                                    {`${new Date(flight.returnDepartureTime).toLocaleString('es-ES', { 
+                                        day: '2-digit', month: '2-digit', year: 'numeric', 
+                                        hour: '2-digit', minute: '2-digit' 
+                                    })} - 
+                                        ${new Date(flight.returnArrivalTime).toLocaleString('es-ES', { 
+                                        day: '2-digit', month: '2-digit', year: 'numeric', 
+                                        hour: '2-digit', minute: '2-digit' 
+                                    })}`}
+                                    </span>
                                 <p>{`${flight.returnDepartureIata} - ${flight.returnArrivalIata}`}</p>
                             </div>
                         )}
@@ -52,13 +78,22 @@ const FlightDetails = () => {
                         <div key={index} className='grid grid-cols-12 rounded-xl p-4 bg-slate-300'>
                             <div className='col-span-7'>
                                 <h3>Segment {index + 1}</h3>
-                                <p>{segment.departureTime} - {segment.arrivalTime}</p>
+                                <p>
+                                    {`${new Date(segment.departureTime).toLocaleString('es-ES', { 
+                                    day: '2-digit', month: '2-digit', year: 'numeric', 
+                                    hour: '2-digit', minute: '2-digit' 
+                                })} - 
+                                    ${new Date(segment.arrivalTime).toLocaleString('es-ES', { 
+                                    day: '2-digit', month: '2-digit', year: 'numeric', 
+                                    hour: '2-digit', minute: '2-digit' 
+                                })}`}
+                                </p>
                                 <p>Airline: {segment.airlineCode}</p>
                                 <p>Aircraft type: {segment.aircraftType}</p>
                                 <p>Cabin: {segment.cabin}</p>
                                 <p>Flight class: {segment.flightClass}</p>
                                 <p>Flight number: {segment.flightNumber}</p>
-                                <p></p><p>Layover time: {segment.layoverTime != "PT0S" ? <span>{segment.layoverTime}</span>:<span>0</span>}</p>
+                                <p></p><p>Layover time: {segment.layoverTime != "PT0S" ? <span>{segment.layoverTime.split("T")[1].toLowerCase()}</span>:<span>0</span>}</p>
 
                             </div>
                             <div className='col-span-5'>
@@ -92,12 +127,12 @@ const FlightDetails = () => {
                     ))}
                     <div className='bg-slate-200 p-4 rounded-xl'>
                         <h2>Price Breakdown </h2>
-                        <p>Base: ${flight.base}</p>
-                        <p>Price: ${flight.price}</p>
-                        <p>Price per Traveler: ${flight.pricePerTraveler[0]}</p>
+                        <p>Base: ${flight.base + " " + flight.currency}</p>
+                        <p>Price: ${flight.price + " " + flight.currency}</p>
+                        <p>Price per Traveler: ${flight.pricePerTraveler[0] + " " +flight.currency}</p>
                         <p>Fees</p>
                         {flight.fees?.map((fee:any, index:any) => (
-                            <p key={index}>{fee.type.toLowerCase()} ${fee.amount}</p>
+                            <p key={index}>{fee.type.toLowerCase()} ${fee.amount + " " + flight.currency}</p>
                             ))}
                         
 

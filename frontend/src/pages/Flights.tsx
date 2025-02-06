@@ -112,10 +112,20 @@ function Flights() {
           {flights ? (
             <section className="w-full border min-h-screen bg-slate-200 flex flex-col gap-8 p-4">
               {flights.map((flight: any, index: number) => (
-                <div key={index} className={`rounded-xl grid grid-cols-12 border bg-slate-100 p-4 gap-4 ${flight.returnDepartureTime ? " grid-rows-2" : ""}`}>
+                <div key={index} className={`rounded-xl grid grid-cols-12 border bg-slate-100 p-4 gap-4`}>
                   {/* COL 1 */}
                   <div className="col-span-4">
-                    <span>{`${flight.departureTime} - ${flight.arrivalTime}`}</span>
+                    <span>
+                      {`${new Date(flight.departureTime).toLocaleString('es-ES', { 
+                          day: '2-digit', month: '2-digit', year: 'numeric', 
+                          hour: '2-digit', minute: '2-digit' 
+                      })} - 
+                        ${new Date(flight.arrivalTime).toLocaleString('es-ES', { 
+                          day: '2-digit', month: '2-digit', year: 'numeric', 
+                          hour: '2-digit', minute: '2-digit' 
+                      })}`}
+                    </span>
+
                     <p>{`${flight.departureIata} - ${flight.arrivalIata}`}</p>
                   </div>
                   {/* COL 2 */}
@@ -127,7 +137,7 @@ function Flights() {
                     ))}
                     <p>-----------</p>
                     <span>{flight.returnArrivalTime && flight.returnTotalDuration.split("T")[1].toLowerCase()}</span>
-                    <p>{flight.returnStops.length === 0 ? "" : ` Return Stops: ${flight.returnStops.length}`}</p>
+                    <p>{flight.returnStops.length === 0 ? "(Non-Stop)" : ` Return Stops: ${flight.returnStops.length}`}</p>
                     {flight.returnStops.map((returnStop: any, index: number) => (
                       <div key={index}>{`${returnStop.airportCode} - ${returnStop.duration.split("T")[1].toLowerCase()}`}</div>
                     ))}
@@ -137,14 +147,23 @@ function Flights() {
                     <p>{`$${flight.price} ${flight.currency}`}<br />total</p>
                     <br />
                     <p>{`$${flight.pricePerTraveler[0]} ${flight.currency}`}<br />per Traveler</p>
-                    <button className="bg-blue-400 hover:bg-blue-600 px-4 py-2 transition-colors" onClick={() => {
+                    <button className="rounded-xl text-white bg-blue-400 hover:bg-blue-600 px-4 py-2 transition-colors" onClick={() => {
                       localStorage.setItem("flight_info", JSON.stringify(flight))
                       navigate("/details")
                     }}>Details</button>
                   </div>
                   {flight.returnArrivalTime && (
                     <div className="col-span-4">
-                      <span>{`${flight.returnDepartureTime} - ${flight.returnArrivalTime}`}</span>
+                      <span>
+                      {`${new Date(flight.returnDepartureTime).toLocaleString('es-ES', { 
+                          day: '2-digit', month: '2-digit', year: 'numeric', 
+                          hour: '2-digit', minute: '2-digit' 
+                      })} - 
+                        ${new Date(flight.returnArrivalTime).toLocaleString('es-ES', { 
+                          day: '2-digit', month: '2-digit', year: 'numeric', 
+                          hour: '2-digit', minute: '2-digit' 
+                      })}`}
+                    </span>
                       <p>{`${flight.returnDepartureIata} - ${flight.returnArrivalIata}`}</p>
                     </div>
                   )}
