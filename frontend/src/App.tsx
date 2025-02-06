@@ -66,7 +66,7 @@ function App() {
         </div>
       ) : (
         <main className="flex border flex-col gap-4 bg-slate-200 items-center justify-center h-screen">
-          <h1 className="font-bold text-6xl">Flight Search</h1>
+          <h1 id= "Flight Search" className="font-bold text-6xl">Flight Search</h1>
           <section className="bg-slate-50 border rounded-xl shadow-lg md:w-1/2 xl:w-[28%] p-8 w-full">
             <form className="flex flex-col w-full" onSubmit={handleSubmit}>
               <FormInputSection>
@@ -80,23 +80,23 @@ function App() {
               </FormInputSection>
 
               <FormInputSection>
-                <label>Departure date</label>
-                <FormInput type="date" name="departure-date" setState={setDepDate} min={new Date().toISOString().split("T")[0]} required />
+                <label htmlFor="Departure date">Departure date</label>
+                <FormInput id ="Departure date" type="date" name="departure-date" setState={setDepDate} min={new Date().toISOString().split("T")[0]} required />
               </FormInputSection>
 
               <FormInputSection>
-                <label>Return date</label>
-                <FormInput type="date" name="return-date" setState={setReturnDate} min={depDate ?? ""} />
+                <label htmlFor="Return Date">Return date</label>
+                <FormInput id="Return Date"type="date" name="return-date" setState={setReturnDate} min={depDate ?? ""} />
               </FormInputSection>
 
               <FormInputSection>
-                <label>Adults</label>
-                <FormInput type="number" name="adults" setState={setAdults} defaultValue={1} min={1} />
+                <label htmlFor="adults">Adults</label>
+                <FormInput id="adults" type="number" name="adults" setState={setAdults} defaultValue={1} min={1} />
               </FormInputSection>
 
               <FormInputSection>
-                <label>Currency</label>
-                <select name="currency" className="border w-48 md:w-52 m-2" onChange={(e) => setCurrency(e.target.value)} value={currency}>
+                <label htmlFor="currency">Currency</label>
+                <select id="currency" name="currency" className="border w-48 md:w-52 m-2" onChange={(e) => setCurrency(e.target.value)} value={currency}>
                   <option value="USD">USD</option>
                   <option value="EUR">EUR</option>
                   <option value="MXN">MXN</option>
@@ -104,13 +104,13 @@ function App() {
               </FormInputSection>
 
               <div className="self-start">
-                <input type="checkbox" name="nonStop" className="mr-1" checked={nonStop} onChange={(e) => setNonStop(e.target.checked)} />
-                <label>Non-stop</label>
+                <input id="Non-stop" type="checkbox" name="nonStop" className="mr-1" checked={nonStop} onChange={(e) => setNonStop(e.target.checked)} />
+                <label htmlFor="Non-stop">Non-stop</label>
               </div>
 
               {error && <p className="text-red-500">{error}</p>} {}
               
-              <input type="submit" className="bg-blue-800 cursor-pointer rounded-full text-white disabled:opacity-50 mt-3 p-2" disabled={loading} />
+              <input value="Search FLights" aria-label="Search Flights" type="submit" className="bg-blue-800 cursor-pointer rounded-full text-white disabled:opacity-50 mt-3 p-2" disabled={loading} />
             </form>
           </section>
         </main>

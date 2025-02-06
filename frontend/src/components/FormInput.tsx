@@ -2,6 +2,7 @@
 import React from 'react';
 
 interface FormInput {
+    id: string;
     type: React.HTMLInputTypeAttribute
     name: string
     returnDate?: boolean
@@ -11,9 +12,9 @@ interface FormInput {
     defaultValue?: string | number
 }
 
-const FormInput: React.FC<FormInput> = ({ type, name, setState, min, required, defaultValue }) => {
+const FormInput: React.FC<FormInput> = ({ id, type, name, setState, min, required, defaultValue }) => {
     return (
-    <input className='border w-48 md:w-52 m-2' type={type} name={name}  
+    <input id = {id} className='border w-48 md:w-52 m-2' type={type} name={name}  
     min={type === "number" ? (min as number) : (min as string)}  required={required} onChange={(value) => setState(value.target.value)} defaultValue = {defaultValue} />
     );
 }

@@ -6,6 +6,7 @@ interface Switcher3Props {
 }
 
 const Switcher3: React.FC<Switcher3Props> = ({ checked, onChange }) => {
+  
   const handleCheckboxChange = () => {
     if (onChange) {
       onChange(!checked)
