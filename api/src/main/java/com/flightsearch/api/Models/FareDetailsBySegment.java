@@ -7,6 +7,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class FareDetailsBySegment {
+
     private String segmentId;
     private String cabin;
 
@@ -16,11 +17,11 @@ public class FareDetailsBySegment {
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
     private List<Amenities> amenities;
 
-    public FareDetailsBySegment(){
+    public FareDetailsBySegment() {
 
     }
 
-    public FareDetailsBySegment(String segmentId, String cabin, String flightClass, List<Amenities> amenities){
+    public FareDetailsBySegment(String segmentId, String cabin, String flightClass, List<Amenities> amenities) {
         this.segmentId = segmentId;
         this.cabin = cabin;
         this.flightClass = flightClass;
@@ -30,6 +31,7 @@ public class FareDetailsBySegment {
     public String getSegmentId() {
         return segmentId;
     }
+
     public void setSegmentId(String segmentId) {
         this.segmentId = segmentId;
     }

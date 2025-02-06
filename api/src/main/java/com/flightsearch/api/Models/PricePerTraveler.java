@@ -1,6 +1,7 @@
 package com.flightsearch.api.Models;
 
 public class PricePerTraveler {
+
     private String currency;
     private String total;
     private String base;

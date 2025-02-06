@@ -14,18 +14,16 @@ import org.springframework.web.reactive.function.client.ExchangeStrategies;
 import org.springframework.web.reactive.function.client.WebClient;
 
 //https://developer.okta.com/blog/2021/05/05/client-credentials-spring-security
-
 @Configuration
 public class OAuthClientConfiguration {
 
     @Bean
     @SuppressWarnings("unused")
     ReactiveClientRegistrationRepository clientRegistration(
-        @Value("${spring.security.oauth2.client.registration.amadeus.client-id}") String clientId,
-        @Value("${spring.security.oauth2.client.registration.amadeus.client-secret}") String clientSecret,
-        @Value("${spring.security.oauth2.client.registration.amadeus.authorization-grant-type}") String authorizationGrantType,
-        @Value("${spring.security.oauth2.client.provider.amadeus.token-uri}") String tokenUri
-
+            @Value("${spring.security.oauth2.client.registration.amadeus.client-id}") String clientId,
+            @Value("${spring.security.oauth2.client.registration.amadeus.client-secret}") String clientSecret,
+            @Value("${spring.security.oauth2.client.registration.amadeus.authorization-grant-type}") String authorizationGrantType,
+            @Value("${spring.security.oauth2.client.provider.amadeus.token-uri}") String tokenUri
     ) {
 
         ClientRegistration registration = ClientRegistration
@@ -36,8 +34,7 @@ public class OAuthClientConfiguration {
                 .authorizationGrantType(new AuthorizationGrantType(authorizationGrantType))
                 .build();
         return new InMemoryReactiveClientRegistrationRepository(registration);
-    
-    
+
     }
 
     @Bean
@@ -51,8 +48,8 @@ public class OAuthClientConfiguration {
                 .filter(oauth)
                 .baseUrl("https://test.api.amadeus.com")
                 .exchangeStrategies(ExchangeStrategies.builder()
-                .codecs(configurer -> configurer.defaultCodecs().maxInMemorySize(10 * 1024 * 1024)) //this cause amadesu body response was too big for the default buffer
-                .build())
+                        .codecs(configurer -> configurer.defaultCodecs().maxInMemorySize(10 * 1024 * 1024)) //this cause amadesu body response was too big for the default buffer
+                        .build())
                 .build();
     }
 

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router'
 
@@ -12,7 +13,7 @@ const FlightDetails = () => {
         }
         setFlightData(JSON.parse(flightData))
         console.log(JSON.parse(flightData))
-    }, [])
+    }, [navigate])
 
 
     return (

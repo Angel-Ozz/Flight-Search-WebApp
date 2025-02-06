@@ -3,11 +3,12 @@ package com.flightsearch.api.Models;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class Amenities {
+
     private String description;
     @JsonProperty("isChargeable")
     private boolean chargeable;
 
-    public Amenities(){
+    public Amenities() {
 
     }
 
@@ -31,6 +32,5 @@ public class Amenities {
     public void setChargeable(boolean chargeable) {
         this.chargeable = chargeable;
     }
-
 
 }

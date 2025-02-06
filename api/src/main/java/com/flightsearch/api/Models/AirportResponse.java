@@ -3,10 +3,11 @@ package com.flightsearch.api.Models;
 import java.util.List;
 
 public class AirportResponse {
+
     private Meta meta;
     private List<Airports> data;
 
-    public AirportResponse(){
+    public AirportResponse() {
 
     }
 
@@ -26,7 +27,7 @@ public class AirportResponse {
     public List<Airports> getData() {
         return data;
     }
-    
+
     public void setData(List<Airports> data) {
         this.data = data;
     }

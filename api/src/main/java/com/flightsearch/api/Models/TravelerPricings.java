@@ -3,11 +3,12 @@ package com.flightsearch.api.Models;
 import java.util.List;
 
 public class TravelerPricings {
+
     private String travelerId;
     private PricePerTraveler price;
     private List<FareDetailsBySegment> fareDetailsBySegment;
 
-    public TravelerPricings(){
+    public TravelerPricings() {
 
     }
 
@@ -15,14 +16,14 @@ public class TravelerPricings {
         this.travelerId = travelerId;
         this.price = price;
         this.fareDetailsBySegment = fareDetailsBySegment;
-        
+
     }
 
-    public String getTravelerId(){
+    public String getTravelerId() {
         return this.travelerId;
     }
 
-    public void setTravelerId(String travelerId){
+    public void setTravelerId(String travelerId) {
         this.travelerId = travelerId;
     }
 

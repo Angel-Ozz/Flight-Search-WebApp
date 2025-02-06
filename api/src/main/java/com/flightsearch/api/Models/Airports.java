@@ -1,14 +1,15 @@
 package com.flightsearch.api.Models;
 
 public class Airports {
+
     private String name;
     private String iataCode;
 
-    public Airports(){
+    public Airports() {
 
     }
 
-    public Airports(String name, String iataCode) { 
+    public Airports(String name, String iataCode) {
         this.name = name;
         this.iataCode = iataCode;
     }
@@ -24,12 +25,9 @@ public class Airports {
     public String getIataCode() {
         return iataCode;
     }
-        
+
     public void setIataCode(String iataCode) {
         this.iataCode = iataCode;
     }
 
-
 }
-
-

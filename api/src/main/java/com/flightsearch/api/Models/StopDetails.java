@@ -3,6 +3,7 @@ package com.flightsearch.api.Models;
 import java.time.Duration;
 
 public class StopDetails {
+
     private String airportCode;
     private String airportName;
     private Duration duration;
@@ -31,7 +32,7 @@ public class StopDetails {
     public void setAirportName(String airportName) {
         this.airportName = airportName;
     }
-    
+
     public Duration getDuration() {
         return duration;
     }

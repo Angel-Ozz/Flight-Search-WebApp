@@ -3,6 +3,7 @@ package com.flightsearch.api.Models;
 import java.util.List;
 
 public class Price {
+
     private String currency;
     private String total;
     private String base;

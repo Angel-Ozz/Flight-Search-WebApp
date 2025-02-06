@@ -1,9 +1,10 @@
 package com.flightsearch.api.Models;
 
 public class Meta {
+
     private int count;
 
-    public Meta(){
+    public Meta() {
 
     }
 
@@ -20,4 +21,3 @@ public class Meta {
     }
 
 }
-

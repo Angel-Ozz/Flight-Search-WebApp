@@ -3,6 +3,7 @@ package com.flightsearch.api.Models;
 import java.time.Duration;
 
 public class Segments {
+
     private String id;
     private Flight departure;
     private Flight arrival;
@@ -12,7 +13,7 @@ public class Segments {
     private Operating operating;
     private Duration duration;
 
-    public Segments(){
+    public Segments() {
 
     }
 
@@ -25,69 +26,69 @@ public class Segments {
         this.aircraft = aircraft;
         this.operating = operating;
         this.duration = duration;
-        }
+    }
 
     public String getId() {
-            return id;
-        }
-    
+        return id;
+    }
+
     public void setId(String id) {
-            this.id = id;
-        }
-    
+        this.id = id;
+    }
+
     public Flight getDeparture() {
-            return departure;
-        }
-    
+        return departure;
+    }
+
     public void setDeparture(Flight departure) {
-            this.departure = departure;
-        }
-    
+        this.departure = departure;
+    }
+
     public Flight getArrival() {
-            return arrival;
-        }
-    
+        return arrival;
+    }
+
     public void setArrival(Flight arrival) {
-            this.arrival = arrival;
-        }
-    
+        this.arrival = arrival;
+    }
+
     public String getCarrierCode() {
-            return carrierCode;
-        }
-    
+        return carrierCode;
+    }
+
     public void setCarrierCode(String carrierCode) {
-            this.carrierCode = carrierCode;
-        }
-    
+        this.carrierCode = carrierCode;
+    }
+
     public String getNumber() {
-            return number;
-        }
-    
+        return number;
+    }
+
     public void setNumber(String number) {
-            this.number = number;
-        }
-    
+        this.number = number;
+    }
+
     public Aircraft getAircraft() {
-            return aircraft;
-        }
-    
+        return aircraft;
+    }
+
     public void setAircraft(Aircraft aircraft) {
-            this.aircraft = aircraft;
-        }
-    
+        this.aircraft = aircraft;
+    }
+
     public Operating getOperating() {
-            return operating;
-        }
-    
+        return operating;
+    }
+
     public void setOperating(Operating operating) {
-            this.operating = operating;
-        }
-    
+        this.operating = operating;
+    }
+
     public Duration getDuration() {
-            return duration;
-        }
-    
+        return duration;
+    }
+
     public void setDuration(Duration duration) {
-            this.duration = duration;
-        }
+        this.duration = duration;
+    }
 }

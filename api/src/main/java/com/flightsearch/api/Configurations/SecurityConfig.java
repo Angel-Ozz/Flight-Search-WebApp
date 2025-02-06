@@ -7,21 +7,20 @@ import org.springframework.security.config.annotation.web.configurers.AbstractHt
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 
-
 @Configuration
 public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-            .csrf(AbstractHttpConfigurer::disable)            
-            .securityMatcher("/**")            
-            .sessionManagement(sessionManagementConfigurer -> sessionManagementConfigurer.sessionCreationPolicy(SessionCreationPolicy.STATELESS))            
-            .formLogin(AbstractHttpConfigurer::disable)            
-            .authorizeHttpRequests(registry -> registry.requestMatchers("/**").permitAll()                    
-            .anyRequest().authenticated()            
-            );    
+                .csrf(AbstractHttpConfigurer::disable)
+                .securityMatcher("/**")
+                .sessionManagement(sessionManagementConfigurer -> sessionManagementConfigurer.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .formLogin(AbstractHttpConfigurer::disable)
+                .authorizeHttpRequests(registry -> registry.requestMatchers("/**").permitAll()
+                .anyRequest().authenticated()
+                );
         return http.build();
     }
-    
+
 }

@@ -3,6 +3,7 @@ package com.flightsearch.api.Models;
 import java.util.List;
 
 public class Data {
+
     private String id;
     private List<Itineraries> itineraries;
     private Price price;
@@ -42,7 +43,7 @@ public class Data {
     public void setPrice(Price price) {
         this.price = price;
     }
- 
+
     public List<TravelerPricings> getTravelerPricings() {
         return travelerPricings;
     }
