@@ -47,7 +47,7 @@ const FlightDetails = () => {
                             ))}
                             <p>-----------</p>
                             <span>{flight.returnArrivalTime && flight.returnTotalDuration.split("T")[1].toLowerCase()}</span>
-                            <p>{flight.returnStops.length === 0 ? "(Non-Stop)" : ` Return Stops: ${flight.returnStops.length}`}</p>
+                            <p>{flight.returnStops.length === 0 ? "" : ` Return Stops: ${flight.returnStops.length}`}</p>
                             {flight.returnStops.map((returnStop: any, index: number) => (
                             <div key={index}>{`${returnStop.airportCode} - ${returnStop.duration.split("T")[1].toLowerCase()}`}</div>
                             ))}

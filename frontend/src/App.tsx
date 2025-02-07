@@ -28,7 +28,7 @@ function App() {
     setLoading(true) 
     setError(null) 
 
-    const flightsEndpoint = `http://localhost:8080/flights/search?originLocationCode=${depAirport}&destinationLocationCode=${arrAirport}&departureDate=${depDate}&returnDate=${returnDate}&adults=${adults}&nonStop=${nonStop}&currencyCode=${currency}`
+    const flightsEndpoint = `http://localhost:8080/flights/search?originLocationCode=${depAirport}&destinationLocationCode=${arrAirport}&departureDate=${depDate}&returnDate=${returnDate || ""}&adults=${adults}&nonStop=${nonStop}&currencyCode=${currency}`
 
     try {
       const response = await fetch(flightsEndpoint)
